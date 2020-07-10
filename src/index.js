@@ -22,7 +22,6 @@ const app = express();
 
 
 app.engine('hbs',handlebars({
-  layoutsDir: `${__dirname}/templates/layouts`,
   extname: 'hbs'
 }));
 app.set('view engine', 'hbs');
