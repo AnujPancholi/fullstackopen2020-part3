@@ -1,19 +1,31 @@
 "use strict";
 
+const CONFIG = {
+	port: 3001,
+  dateFilePath: `${__dirname}/../data.json`
+}
+const fs = require('fs');
 const express = require("express");
 const bodyParser = require('body-parser');
-const DATA = require('../data.json');
+const DATA = require(CONFIG.dateFilePath);
 const {
   logRequestTime
-} = require('./middlewares/index.js')
-// const {
-//   getInfoPage
-// } = require('./templates/index.js');
-const handlebars = require('express-handlebars')
+} = require('./middlewares/index.js');
+const handlebars = require('express-handlebars');
 
-const CONFIG = {
-	port: 3001
-}
+
+const updateDateFile = () => {
+  return new Promise((resolve,reject) => {
+    fs.writeFile(JSON.stringify(DATA),(err) => {
+      if(err){
+        reject(err);
+      } else {
+        resolve(true);
+      }
+    })
+  })
+} 
+
 
 
  
@@ -36,11 +48,21 @@ app.use(logRequestTime);
 //Endpoint to get all person records - Exercise 3.1
 app.get('/api/persons',(req,res,next) => {
 	res.send(Object.keys(DATA.persons).reduce((personsArr,id) => {
-    return personsArr.concat({
-      id: parseInt(id),
-      ...DATA.persons[id]
-    });
+    return personsArr.concat(DATA.persons[id]);
   },[]));
+})
+
+
+app.get(`/api/persons/:id`,async(req,res,next) => {
+
+  if(DATA.persons.hasOwnProperty(req.params.id)){
+    res.send(DATA.persons[req.params.id]);
+  } else {
+    res.status(404).send({
+      message: `ID ${req.params.id} NOT FOUND`
+    })
+  }
+
 })
 
 
