@@ -15,6 +15,8 @@ const CONFIG = {
 }
 
 
+
+//Endpoint to get all person records - Exercise 3.1
 app.get('/api/persons',(req,res,next) => {
 	res.send(Object.keys(DATA.persons).reduce((personsArr,id) => {
     return personsArr.concat({
