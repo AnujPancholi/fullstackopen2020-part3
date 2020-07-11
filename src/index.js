@@ -14,17 +14,9 @@ const {
 const handlebars = require('express-handlebars');
 
 
-const updateDateFile = () => {
-  return new Promise((resolve,reject) => {
-    fs.writeFile(JSON.stringify(DATA),(err) => {
-      if(err){
-        reject(err);
-      } else {
-        resolve(true);
-      }
-    })
-  })
-} 
+const getNewId = () => {
+  return String(Math.floor(Math.random()*1000000));
+}
 
 
 
@@ -79,6 +71,48 @@ app.delete("/api/persons/:id",(req,res,next) => {
         message: `ID ${req.params.id} NOT FOUND`
       })
     }
+})
+
+
+app.post('/api/persons',(req,res,next) => {
+
+  const person = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber
+  }
+
+  const responseProperties = {
+    body: {},
+    statusCode: 204
+  }
+
+  try{
+    if(!person.name || !person.phoneNumber){
+      responseProperties.statusCode=400;
+      throw new Error("MANDATORY PARAM MISSING");
+    }
+
+    person.id = getNewId();
+
+    DATA.persons[person.id] = person;
+
+    responseProperties.body = {
+      message: `NEW RECORD UPDATED`,
+      person: person
+    }
+    responseProperties.statusCode = 200;
+
+  }catch(e){
+    console.error(`PERSONS|POST|ERROR`,e);
+    responseProperties.statusCode = responseProperties.statusCode<400 ? 500 : responseProperties.statusCode;
+    responseProperties.body = {
+      message: e.message || `INTERNAL SERVER ERROR`
+    }
+  }
+
+  res.status(responseProperties.statusCode).send(responseProperties.body);
+
+
 })
 
 
