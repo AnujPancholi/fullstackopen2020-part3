@@ -66,6 +66,22 @@ app.get(`/api/persons/:id`,async(req,res,next) => {
 })
 
 
+
+app.delete("/api/persons/:id",(req,res,next) => {
+
+    if(DATA.persons.hasOwnProperty(req.params.id)){
+      delete DATA.persons[req.params.id];
+      res.send({
+        message: `ID ${req.params.id} DELETED`
+      })
+    } else {
+      res.status(404).send({
+        message: `ID ${req.params.id} NOT FOUND`
+      })
+    }
+})
+
+
 app.get('/info',(req,res,next) => {
   // console.log(req.timestamp);
 
