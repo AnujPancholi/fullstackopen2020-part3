@@ -71,6 +71,11 @@ As for testing the API on postman, I am including screenshots:
 ![DELETE not found](supporting_screenshots/DELETE_FAILURE.png)
 
 
+## Exercise 3.5
+
+Added a simple POST endpoint to add a new persons entry. I've also included a check for a missing `name` or `phoneNumber` parameter, which is actually part of the next exercise, but I chose to do it from the get go. If any of these mandatory parameters is missing, http status code 404 is returned.
+
+
 
 
 
