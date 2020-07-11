@@ -59,6 +59,18 @@ I'm not a front-end dev and I wasn't familiar with server-side templating, so I 
 
 Implemented a simple endpoint that takes the `id` as a URL param, and if it isn't found in the data object, returns an http status code of **404** which corresponds to "not found".
 
+## Exercise 3.4
+
+I was a bit confused regarding what the exercise wanted exactly - did I only have to delete the entry from the in-memory object, or did I *also* have to persist the changes in the hardcoded data file, so that when the server is restarted, the changes would reflect?
+
+One look at the first code snippet in the subsection titled "Deleting resources" suggested that we need not persist the changes wherever we had hardcoded them, so merely deleting the record from the in-memory object would suffice, which is what I did.
+
+As for testing the API on postman, I am including screenshots:
+
+![DELETE request successful](supporting_screenshots/DELETE_REQUEST.png)
+![DELETE not found](supporting_screenshots/DELETE_FAILURE.png)
+
+
 
 
 
