@@ -75,6 +75,10 @@ As for testing the API on postman, I am including screenshots:
 
 Added a simple POST endpoint to add a new persons entry. I've also included a check for a missing `name` or `phoneNumber` parameter, which is actually part of the next exercise, but I chose to do it from the get go. If any of these mandatory parameters is missing, http status code 404 is returned.
 
+## Exercise 3.6
+
+Added the required param checks - http status code 404 returned in both cases along with an object with a single property "message" describing the error.
+
 
 
 
