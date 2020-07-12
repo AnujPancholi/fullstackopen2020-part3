@@ -92,6 +92,15 @@ app.post('/api/persons',(req,res,next) => {
       throw new Error("MANDATORY PARAM MISSING");
     }
 
+    const existingNameSet = Object.keys(DATA.persons).reduce((nameSet,id) => {
+    	nameSet.add(DATA.persons[id].name);
+    	return nameSet
+    },new Set());
+    if(existingNameSet.has(person.name)){
+    	responseProperties.statusCode=404;
+    	throw new Error(`NAME ${person.name} ALREADY EXISTS`);
+    }
+
     person.id = getNewId();
 
     DATA.persons[person.id] = person;
