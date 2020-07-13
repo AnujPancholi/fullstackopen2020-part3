@@ -19,10 +19,6 @@ const getNewId = () => {
   return String(Math.floor(Math.random()*1000000));
 }
 
-
-
- 
-
 const app = express();
 
 
@@ -35,7 +31,18 @@ app.use(bodyParser.json());
 
 app.use(logRequestTime);
 
-app.use(morgan('tiny'));
+
+morgan.token('requestPayload', (request, response) => {
+    return JSON.stringify(request.body)
+})
+
+app.use(morgan(':method :url RESCODE :status - RESTIME :response-time ms - PAYLOAD :requestPayload',{
+	skip: (req,res) => req.method!="POST"
+}))
+
+app.use(morgan('tiny',{
+	skip: (req,res) => req.method==="POST"
+}));
 
 
 
