@@ -79,6 +79,14 @@ Added a simple POST endpoint to add a new persons entry. I've also included a ch
 
 Added the required param checks - http status code 404 returned in both cases along with an object with a single property "message" describing the error.
 
+## Exercise 3.7
+
+The course was right - the documentation that morgan has is, to put it mildly, less-than-perfect. In fact, although most of it was the same, I found better documentation on how to use morgan with express [in the express docs](http://expressjs.com/en/resources/middleware/morgan.html).
+
+Used it with the "tiny" config, as instructed - the following is a sample of what it logged out to the console on the server:
+
+![morgan sample](supporting_screenshots/MORGAN_SAMPLE.png)
+
 
 
 
