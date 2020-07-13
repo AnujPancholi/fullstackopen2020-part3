@@ -85,7 +85,7 @@ The course was right - the documentation that morgan has is, to put it mildly, l
 
 Used it with the "tiny" config, as instructed - the following is a sample of what it logged out to the console on the server:
 
-![morgan sample 1](supporting_screenshots/MORGAN_SAMPLE.png)
+![morgan sample 1](supporting_screenshots/MORGAN-SAMPLE.png)
 
 ## Exercise 3.8
 
