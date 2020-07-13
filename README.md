@@ -85,7 +85,15 @@ The course was right - the documentation that morgan has is, to put it mildly, l
 
 Used it with the "tiny" config, as instructed - the following is a sample of what it logged out to the console on the server:
 
-![morgan sample](supporting_screenshots/MORGAN_SAMPLE.png)
+![morgan sample 1](supporting_screenshots/MORGAN_SAMPLE.png)
+
+## Exercise 3.8
+
+I noticed in the docs that I linked earlier that you can indeed specify a custom string to log using morgan, with whatever information you wish to log. So, first I went about constructing that string, and I added another instance of the morgan middleware, with that string. I used the `morgan.token` method to tokenize the request payload (body) and to add that to the log string.
+
+Now the challenge was to only log this for POST requests, so, after some searching, I found [this](https://github.com/expressjs/morgan/blob/master/README.md#skip) and I used this `skip` function as an option in morgan, to log it only for POST requests. Then, I noticed that POST requests were being logged twice, so I used the same `skip` function to not log POST requests in the predefined 'tiny' config, so that POST requests would only be logged once with the custom log string.
+
+![morgan sample 2](supporting_screenshots/MORGAN-POST-CONFIG.png)
 
 
 
