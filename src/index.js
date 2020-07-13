@@ -12,6 +12,7 @@ const {
   logRequestTime
 } = require('./middlewares/index.js');
 const handlebars = require('express-handlebars');
+const morgan = require("morgan");
 
 
 const getNewId = () => {
@@ -33,6 +34,8 @@ app.set('view engine', 'hbs');
 app.use(bodyParser.json());
 
 app.use(logRequestTime);
+
+app.use(morgan('tiny'));
 
 
 
