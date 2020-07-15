@@ -95,6 +95,16 @@ Now the challenge was to only log this for POST requests, so, after some searchi
 
 ![morgan sample 2](supporting_screenshots/MORGAN-POST-CONFIG.png)
 
+## Exercise 3.9
+
+The main things that I accomplished here:
+ - Introduce the CORS middleware at the backend
+ - Change the baseURL in the frontend (I've made a copy of the front-end for part 3 so that the finished app for part2 remains untouched, and I've made the changed in that, which at the time of writing this, is in a different repo)
+
+The above points were relatively simple to implement.
+
+Also, I got a little carried away and implemented a PUT endpoint on the backend to change the phone numbers, and realised my mistake when I re-read the exercise statement later. Will probably re-do it later.
+
 
 
 
