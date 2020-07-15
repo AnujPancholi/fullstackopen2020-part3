@@ -134,8 +134,53 @@ app.post('/api/persons',(req,res,next) => {
 
   res.status(responseProperties.statusCode).send(responseProperties.body);
 
+})
+
+app.put('/api/persons/:id',(req,res,next) => {
+
+  const personId = req.params.id;
+
+  const updateProperties = req.body;
+
+  //in case a malicious request tries to change the id of the record
+  delete updateProperties.id;
+
+  const responseProperties = {
+    body: {},
+    statusCode: 204
+  }
+
+  try{
+    const existingPerson = DATA.persons[req.params.id];
+    if(!existingPerson){
+      responseProperties.statusCode=404;
+      throw new Error(`RECORD WITH ID ${personId} NOT FOUND`);
+    }
+
+    DATA.persons[personId] = {
+      ...DATA.persons[personId],
+      ...updateProperties
+    }
+
+    responseProperties.statusCode = 200;
+    responseProperties.body = {
+      message: "RECORD UPDATED",
+      person: DATA.persons[personId]
+    }
+
+  }catch(e){
+    console.error(`PERSONS|POST|ERROR`,e);
+    responseProperties.statusCode = responseProperties.statusCode<400 ? 500 : responseProperties.statusCode;
+    responseProperties.body = {
+      message: e.message || `INTERNAL SERVER ERROR`
+    }
+  }
+
+  res.status(responseProperties.statusCode).send(responseProperties.body);
 
 })
+
+
 
 
 app.get('/info',(req,res,next) => {
