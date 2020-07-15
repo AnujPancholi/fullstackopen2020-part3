@@ -13,6 +13,7 @@ const {
 } = require('./middlewares/index.js');
 const handlebars = require('express-handlebars');
 const morgan = require("morgan");
+const cors = require('cors');
 
 
 const getNewId = () => {
@@ -21,6 +22,8 @@ const getNewId = () => {
 
 const app = express();
 
+
+app.use(cors());
 
 app.engine('hbs',handlebars({
   extname: 'hbs'
