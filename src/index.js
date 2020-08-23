@@ -1,5 +1,6 @@
 "use strict";
 
+//adding port from env variables for deploy
 const CONFIG = {
 	port: process.env.PORT || 3001,
   dateFilePath: `${__dirname}/../data.json`
