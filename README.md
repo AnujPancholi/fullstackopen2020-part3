@@ -105,6 +105,19 @@ The above points were relatively simple to implement.
 
 Also, I got a little carried away and implemented a PUT endpoint on the backend to change the phone numbers, and realised my mistake when I re-read the exercise statement later. Will probably re-do it later.
 
+## Exercise 3.10
+
+First I added the Procfile and copied the one line that the course prescribed into it. Then, instead of following the instructions, I did it my own way, and most of it did *not* involve the command line. I'm not sure if that counts as cheating, but it shouldn't.
+
+I logged into my heroku account (after a long time thanks to this course) and created a new app from the dashboard itself, assuming that there would be some way for me to connect my existing repository on Github to Heroku. Sure enough, there was an option in the "Deploy" tab on the Heroku dashboard for this new app. I connected the repository *AnujPancholi/fullstackopen2020-part3* enabled automatic deploy of the `master` branch, so that Heroku would rebuild my app and deploy automatically if I pushed anything to it.
+
+![Heroku Deploy](supporting_screenshots/HEROKU_DEPLOY_1.png)
+
+However, something was wrong, as when I tried to call the persons GET API from the URL of my app, I received an error page from Heroku that asked me to check logs. I figured out the error on my own - it was that I was supplying the wrong command in the Procfile; the line that I copied from the course was `web: node index.js`, whereas I should have modified it to `web: node src/index.js`, since all my actual course code, including the entry file `index.js` was organised in a `src` directory in the root directory of the project.
+
+After this minor fix, it works fine.
+
+![Request to Deployed API](supporting_screenshots/HEROKU_DEPLOY_2.png)
 
 
 
