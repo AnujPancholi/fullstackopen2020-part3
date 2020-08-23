@@ -1,7 +1,7 @@
 "use strict";
 
 const CONFIG = {
-	port: 3001,
+	port: process.env.PORT || 3001,
   dateFilePath: `${__dirname}/../data.json`
 }
 const fs = require('fs');
