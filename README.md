@@ -119,6 +119,22 @@ After this minor fix, it works fine.
 
 ![Request to Deployed API](supporting_screenshots/HEROKU_DEPLOY_2.png)
 
+## Exercise 3.11
+
+Followed the method prescribed in the exercise precisely, however, the exercise statement mentioned that the dev build should work as well.
+
+So the goal was to deploy a prod build on heroku that used the prod API whereas the dev build would still use the dev API that runs locally, not the prod API deployed to Heroku.
+
+For this, I read some [docs regarding environment variables](https://create-react-app.dev/docs/adding-custom-environment-variables) in create-react-app and found a simple solution - to specify the base URL for the backend API in the env variables, and to use that in the backend wrapper. I set up one env file for the "development" env and another for the "production" env, with the localhost path for the dev build and the relative path (as shown in the course) for the production build, and it works just fine.
+
+Here's the prod build (deployed to Heroku):
+
+![Prod Build](supporting_screenshots/PROD_BUILD.png)
+
+And here's the dev build running locally:
+
+![Dev Build](supporting_screenshots/DEV_BUILD.png)
+
 
 
 
