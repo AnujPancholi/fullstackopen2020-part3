@@ -35,6 +35,8 @@ app.use(bodyParser.json());
 
 app.use(logRequestTime);
 
+app.use(express.static('build'));
+
 
 morgan.token('requestPayload', (request, response) => {
     return JSON.stringify(request.body)
