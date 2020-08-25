@@ -35,6 +35,7 @@ app.use(bodyParser.json());
 
 app.use(logRequestTime);
 
+//using static content from the build directory
 app.use(express.static('build'));
 
 
