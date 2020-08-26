@@ -135,7 +135,16 @@ And here's the dev build running locally:
 
 ![Dev Build](supporting_screenshots/DEV_BUILD.png)
 
+## Exercise 3.12
 
+I already had an Atlas account, so I didn't really need to go through the hassle of making the cluster again. So I used the existing cluster, in which I made a new database named `fullstackopen_phonebook`, and created a collection called `entries` in it. I would eventually name the model `Entry` in my script, so the documents would be saved in this collection, as is the convention.
+
+The script works as intended, however, there are just a couple of edge cases that I handled:
+
+ - If no command line params are passed, The script logs an error before exiting.
+ - If only a name is given without a phone number (only 2 command line params instead of 3) to make the entry in the database, the second command line param is ignored and all the documents in the entries collection are retrieved.
+
+Also, I would like state that Mongoose has *terrible* documentation.
 
 
 
