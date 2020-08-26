@@ -5,7 +5,7 @@ const Mongoose = require("mongoose");
 
 
 const DB_CONFIG = {
-	URI: `mongodb+srv://m001-student:${process.argv[2] || ""}@cluster0-a1zxz.mongodb.net/test?retryWrites=true&w=majority`
+	URI: `mongodb+srv://m001-student:${process.argv[2] || ""}@cluster0-a1zxz.mongodb.net/fullstackopen_phonebook?retryWrites=true&w=majority`
 }
 
 
@@ -18,9 +18,10 @@ const run = async() => {
 		}
 
 		Mongoose.connect(DB_CONFIG.URI,{
-			useNewUrlParser: true
+			useNewUrlParser: true,
+			useUnifiedTopology: true
 		})
-		const EntrySchema = new Mongoose.schema({
+		const EntrySchema = new Mongoose.Schema({
 			"name": String,
 			"phoneNumber": String
 		})
@@ -35,19 +36,20 @@ const run = async() => {
 			})
 
 			const entrySaveResult = await entryToAdd.save();
+			// console.log(entrySaveResult);
 
 			console.log("Entry Saved");
 		} else {
-			const allNotesResult = await Note.find({});
+			const allEntriesResult = await Entry.find({});
 
-			console.log(typeof(allNotesResult),Array.isArray(allNotesResult));
+			// console.log(typeof(allEntriesResult),Array.isArray(allEntriesResult));
 
-			allNotesResult.forEach((note) => {
-				console.log(note);
+			allEntriesResult.forEach((entry) => {
+				console.log(entry);
 			})
 		}
 
-		Mongoose.collection.close();
+		Mongoose.connection.close();
 
 	}catch(e){
 		console.error(`ERROR: `,e);
@@ -56,3 +58,6 @@ const run = async() => {
 
 	}
 }
+
+
+run();
