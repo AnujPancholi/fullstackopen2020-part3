@@ -7,6 +7,14 @@ const EntrySchema = new Mongoose.schema({
 	phoneNumber: String
 })
 
+EntrySchema.set('toJSON',{
+	transform: (doc,obj) => {
+		obj.id = obj._id.toString();
+		delete obj._id;
+		delete obj._v;
+	}
+})
+
 const Entry = Mongoose.model('Entry',EntrySchema);
 
 module.exports = Entry;
