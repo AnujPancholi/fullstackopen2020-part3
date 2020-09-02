@@ -23,9 +23,10 @@ const {
 const handlebars = require('express-handlebars');
 const morgan = require("morgan");
 const cors = require('cors');
+const dbUtils = require("./lib/dbUtils.js");
 
 const EntryModel = require('./models/entry.js');
-
+const { resolve } = require("path");
 
 const getNewId = () => {
   return String(Math.floor(Math.random()*1000000));
@@ -82,13 +83,19 @@ app.get('/api/persons',(req,res,next) => {
 
 app.get(`/api/persons/:id`,async(req,res,next) => {
 
-  if(DATA.persons.hasOwnProperty(req.params.id)){
-    res.send(DATA.persons[req.params.id]);
-  } else {
-    res.status(404).send({
-      message: `ID ${req.params.id} NOT FOUND`
-    })
-  }
+  (async() => {
+    try{
+      const entryResult = await EntryModel.findOne({
+        _id: dbUtils.getObjectId(req.params.id)
+      });
+      res.send(entryResult);
+    }catch(e){
+      console.error(`GET /persons/:id | ERROR GETTING ENTRY`);
+      res.status(500).send({
+        message: e.message || "INTERNAL SERVER ERROR"
+      })
+    }
+  })()
 
 })
 
@@ -96,71 +103,88 @@ app.get(`/api/persons/:id`,async(req,res,next) => {
 
 app.delete("/api/persons/:id",(req,res,next) => {
 
-    if(DATA.persons.hasOwnProperty(req.params.id)){
-      delete DATA.persons[req.params.id];
-      res.send({
-        message: `ID ${req.params.id} DELETED`
+    (async() => {
+      const deleteResult = await EntryModel.deleteOne({
+        _id: dbUtils.getObjectId(req.params.id)
       })
-    } else {
-      res.status(404).send({
-        message: `ID ${req.params.id} NOT FOUND`
-      })
-    }
+      if(deleteResult.deletedCount>0){
+        res.send({
+          message: `ID ${req.params.id} DELETED`,
+          deletedCount: deleteResult.deletedCount
+        })
+      } else {
+        res.status(404).send({
+          message: `ID ${req.params.id} NOT FOUND`
+        })
+      }
+    })()
 })
 
 
 app.post('/api/persons',(req,res,next) => {
 
-  const person = {
-    name: req.body.name,
-    phoneNumber: req.body.phoneNumber
-  }
+  
 
-  const responseProperties = {
-    body: {},
-    statusCode: 204
-  }
-
-  try{
-    if(!person.name || !person.phoneNumber){
-      responseProperties.statusCode=400;
-      throw new Error("MANDATORY PARAM MISSING");
+  (async() => {
+    const person = {
+      name: req.body.name,
+      phoneNumber: req.body.phoneNumber
+    }
+  
+    const responseProperties = {
+      body: {},
+      statusCode: 204
     }
 
-    const existingNameSet = Object.keys(DATA.persons).reduce((nameSet,id) => {
-    	nameSet.add(DATA.persons[id].name);
-    	return nameSet
-    },new Set());
-    if(existingNameSet.has(person.name)){
-    	responseProperties.statusCode=404;
-    	throw new Error(`NAME ${person.name} ALREADY EXISTS`);
+    try{
+      if(!person.name || !person.phoneNumber){
+        responseProperties.statusCode=400;
+        throw new Error("MANDATORY PARAM MISSING");
+      }
+  
+      const existingPerson = await EntryModel.findOne({
+        name: person.name
+      })
+      if(!!existingPerson){
+        responseProperties.statusCode=404;
+        throw new Error(`NAME ${person.name} ALREADY EXISTS`);
+      }
+  
+      const personEntry = new EntryModel({
+        name: person.name,
+        phoneNumber: person.phoneNumber
+      })
+
+      const personSaveResult = await personEntry.save();
+  
+      responseProperties.body = {
+        message: `NEW RECORD UPDATED`,
+        person: person
+      }
+      responseProperties.statusCode = 200;
+  
+    }catch(e){
+      console.error(`PERSONS|POST|ERROR`,e);
+      responseProperties.statusCode = responseProperties.statusCode<400 ? 500 : responseProperties.statusCode;
+      responseProperties.body = {
+        message: e.message || `INTERNAL SERVER ERROR`
+      }
     }
 
-    person.id = getNewId();
+    res.status(responseProperties.statusCode).send(responseProperties.body);
+  })();
 
-    DATA.persons[person.id] = person;
+  
 
-    responseProperties.body = {
-      message: `NEW RECORD UPDATED`,
-      person: person
-    }
-    responseProperties.statusCode = 200;
-
-  }catch(e){
-    console.error(`PERSONS|POST|ERROR`,e);
-    responseProperties.statusCode = responseProperties.statusCode<400 ? 500 : responseProperties.statusCode;
-    responseProperties.body = {
-      message: e.message || `INTERNAL SERVER ERROR`
-    }
-  }
-
-  res.status(responseProperties.statusCode).send(responseProperties.body);
+  
 
 })
 
 app.put('/api/persons/:id',(req,res,next) => {
 
-  const personId = req.params.id;
+
+  (async() => {
+    const personId = req.params.id;
 
   const updateProperties = req.body;
 
@@ -173,16 +197,17 @@ app.put('/api/persons/:id',(req,res,next) => {
   }
 
   try{
-    const existingPerson = DATA.persons[req.params.id];
+    const existingPerson = await EntryModel.findOne({
+      _id: dbUtils.getObjectId(personId)
+    })
     if(!existingPerson){
       responseProperties.statusCode=404;
       throw new Error(`RECORD WITH ID ${personId} NOT FOUND`);
     }
 
-    DATA.persons[personId] = {
-      ...DATA.persons[personId],
-      ...updateProperties
-    }
+    const personUpdateResult = await EntryModel.updateOne({
+      _id: dbUtils.getObjectId(personId)
+    },updateProperties);
 
     responseProperties.statusCode = 200;
     responseProperties.body = {
@@ -199,6 +224,9 @@ app.put('/api/persons/:id',(req,res,next) => {
   }
 
   res.status(responseProperties.statusCode).send(responseProperties.body);
+  })();
+
+  
 
 })
 
