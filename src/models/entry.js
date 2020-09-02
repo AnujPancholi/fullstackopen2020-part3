@@ -11,7 +11,7 @@ EntrySchema.set('toJSON',{
 	transform: (doc,obj) => {
 		obj.id = obj._id.toString();
 		delete obj._id;
-		delete obj._v;
+		delete obj.__v;
 	}
 })
 
