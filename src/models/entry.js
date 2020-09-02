@@ -2,7 +2,7 @@
 
 const Mongoose = require("mongoose");
 
-const EntrySchema = new Mongoose.schema({
+const EntrySchema = new Mongoose.Schema({
 	name: String,
 	phoneNumber: String
 })

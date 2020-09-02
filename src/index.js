@@ -3,6 +3,10 @@
 
 require("dotenv").config();
 const Mongoose = require("mongoose");
+Mongoose.connect(process.env.DB_URI,{
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
 
 //adding port from env variables for deploy
 const CONFIG = {
@@ -19,6 +23,8 @@ const {
 const handlebars = require('express-handlebars');
 const morgan = require("morgan");
 const cors = require('cors');
+
+const EntryModel = require('./models/entry.js');
 
 
 const getNewId = () => {
@@ -60,9 +66,17 @@ app.use(morgan('tiny',{
 
 //Endpoint to get all person records - Exercise 3.1
 app.get('/api/persons',(req,res,next) => {
-	res.send(Object.keys(DATA.persons).reduce((personsArr,id) => {
-    return personsArr.concat(DATA.persons[id]);
-  },[]));
+  (async() => {
+    try{
+      const entriesResult = await EntryModel.find({});
+      res.send(entriesResult);
+    }catch(e){
+      console.error(`GET /persons | ERROR GETTING ENTRIES`,e);
+      res.status(500).send({
+        message: e.message || "INTERNAL SERVER ERROR"
+      })
+    }
+  })();
 })
 
 
