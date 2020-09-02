@@ -146,6 +146,12 @@ The script works as intended, however, there are just a couple of edge cases tha
 
 Also, I would like state that Mongoose has *terrible* documentation.
 
+## Exercise 3.13
+
+I simply used the learnings of the last exercise to make the necessary changes to the API.
+
+**Disclaimer**: I actually didn't read the task statement very carefully and made *all* the endpoints do *everything* with the database (creating, reading, updating deleting) not knowing that the subsequent task asked for this. Sorry for this, but ultimately I have done all the work that these exercises are asking for.
+
 
 
 
