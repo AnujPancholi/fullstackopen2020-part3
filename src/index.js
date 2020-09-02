@@ -2,6 +2,7 @@
 
 
 require("dotenv").config();
+const Mongoose = require("mongoose");
 
 //adding port from env variables for deploy
 const CONFIG = {
