@@ -166,6 +166,10 @@ In the dev run, I used `dotenv` and defined the variable in the `.env` file, whi
 
 **DISCLAIMER**: I actually didn't read the task statement very carefully and made *all* the endpoints do *everything* with the database (creating, reading, updating deleting) not knowing that the subsequent task asked for this. Sorry for this, but ultimately I have done all the work that these exercises are asking for.
 
+## Exercise 3.14
+
+As stated in the previous task, I ended up completing this exercise in the last one itself.
+
 
 
 
