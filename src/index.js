@@ -102,7 +102,7 @@ app.get(`/api/persons/:id`,async(req,res,next) => {
 
 
 app.delete("/api/persons/:id",(req,res,next) => {
-
+    //deletion in db
     (async() => {
       const deleteResult = await EntryModel.deleteOne({
         _id: dbUtils.getObjectId(req.params.id)
