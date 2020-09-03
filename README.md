@@ -150,7 +150,21 @@ Also, I would like state that Mongoose has *terrible* documentation.
 
 I simply used the learnings of the last exercise to make the necessary changes to the API.
 
-**Disclaimer**: I actually didn't read the task statement very carefully and made *all* the endpoints do *everything* with the database (creating, reading, updating deleting) not knowing that the subsequent task asked for this. Sorry for this, but ultimately I have done all the work that these exercises are asking for.
+Upon digging a little deeper into Mongoose API docs, I realised they aren't that bad, and I learned about some of the methods of Model class from there.
+
+### Using Mongoose
+
+Also, I have seen some sample code of mongoose, and many people seem to create a `models` directory in which they have a bunch of files, each exporting one mongoose model. So, I structured it in the same way, but then came the challenge of connecting to the db. In the mongodb driver for nodejs, one can get a connection object and then query from that, but in mongoose, we use methods of the models themselves, and connection is done via one call of `Mongoose.connect`, so my doubt was in which `model` file I should connect. Upon doing some research, I found that you are expected to connect in your project as soon as possible so your models can work. For this reason, I decided to do it in the `index.js` file itself, right after `dotenv`.
+
+### Managing the connection URI in env
+
+In the dev run, I used `dotenv` and defined the variable in the `.env` file, which is gitignored (as suggested by the course, several other sources, and to some extent, common sense). However, I would need to set it in the prod env as well, which is the Heroku app. I did this via Heroku dashboard, in which I defined this in the "Config vars" option.
+
+**Note**: As mentioned above, there is no file in the repo itself that defines the db connection URI as an env variable, so, if you clone this, it will not be run without that being explicitly added.
+
+**Note**: I first made the changes in a local dev branch, ran the dev version once, which I tested with postman, and then I merged and pushed to master, so that the deployed app running on heroku would be spared of any potential errors, which I think is the way it ought to be done. However, I have not pushed the dev branch to remote repo because it would accomplish pretty much nothing.
+
+**DISCLAIMER**: I actually didn't read the task statement very carefully and made *all* the endpoints do *everything* with the database (creating, reading, updating deleting) not knowing that the subsequent task asked for this. Sorry for this, but ultimately I have done all the work that these exercises are asking for.
 
 
 
