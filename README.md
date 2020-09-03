@@ -168,7 +168,11 @@ In the dev run, I used `dotenv` and defined the variable in the `.env` file, whi
 
 ## Exercise 3.14
 
-As stated in the previous task, I ended up completing this exercise in the last one itself.
+As stated in the previous exercise, I ended up completing this exercise in the last one itself.
+
+## Exercise 3.15
+
+As stated in exrecise 3.13, have already done this, although I did not see the point of using `findByIdAndRemove` like the course suggests, I used `deleteOne` instead.
 
 
 
