@@ -73,9 +73,9 @@ app.get('/api/persons',(req,res,next) => {
       res.send(entriesResult);
     }catch(e){
       console.error(`GET /persons | ERROR GETTING ENTRIES`,e);
-      res.status(500).send({
-        message: e.message || "INTERNAL SERVER ERROR"
-      })
+      next({
+        err: e
+      });
     }
   })();
 })
@@ -91,9 +91,9 @@ app.get(`/api/persons/:id`,async(req,res,next) => {
       res.send(entryResult);
     }catch(e){
       console.error(`GET /persons/:id | ERROR GETTING ENTRY`);
-      res.status(500).send({
-        message: e.message || "INTERNAL SERVER ERROR"
-      })
+      next({
+        err: e
+      });
     }
   })()
 
@@ -104,17 +104,25 @@ app.get(`/api/persons/:id`,async(req,res,next) => {
 app.delete("/api/persons/:id",(req,res,next) => {
     //deletion in db
     (async() => {
-      const deleteResult = await EntryModel.deleteOne({
-        _id: dbUtils.getObjectId(req.params.id)
-      })
-      if(deleteResult.deletedCount>0){
-        res.send({
-          message: `ID ${req.params.id} DELETED`,
-          deletedCount: deleteResult.deletedCount
+      let responseCode = 500;
+      try{
+        const deleteResult = await EntryModel.deleteOne({
+          _id: dbUtils.getObjectId(req.params.id)
         })
-      } else {
-        res.status(404).send({
-          message: `ID ${req.params.id} NOT FOUND`
+        if(deleteResult.deletedCount>0){
+          res.send({
+            message: `ID ${req.params.id} DELETED`,
+            deletedCount: deleteResult.deletedCount
+          })
+        } else {
+          responseCode=404;
+          throw new Error(`ID ${req.params.id} NOT FOUND`);
+        }
+      }catch(e){
+        console.error(`DELETE /persons/:id | ERROR `,e);
+        next({
+          err: e,
+          httpStatusCode: responseCode
         })
       }
     })()
@@ -133,7 +141,8 @@ app.post('/api/persons',(req,res,next) => {
   
     const responseProperties = {
       body: {},
-      statusCode: 204
+      statusCode: 204,
+      err: null
     }
 
     try{
@@ -166,12 +175,17 @@ app.post('/api/persons',(req,res,next) => {
     }catch(e){
       console.error(`PERSONS|POST|ERROR`,e);
       responseProperties.statusCode = responseProperties.statusCode<400 ? 500 : responseProperties.statusCode;
-      responseProperties.body = {
-        message: e.message || `INTERNAL SERVER ERROR`
-      }
+      responseProperties.err = e;
     }
 
-    res.status(responseProperties.statusCode).send(responseProperties.body);
+    if(responseProperties.err){
+      responseProperties.httpStatusCode = responseProperties.statusCode;
+      next(responseProperties);
+    } else {
+      res.status(responseProperties.statusCode).send(responseProperties.body);
+    }
+
+    
   })();
 
   
@@ -193,7 +207,8 @@ app.put('/api/persons/:id',(req,res,next) => {
 
   const responseProperties = {
     body: {},
-    statusCode: 204
+    statusCode: 204,
+    err: null
   }
 
   try{
@@ -218,20 +233,22 @@ app.put('/api/persons/:id',(req,res,next) => {
   }catch(e){
     console.error(`PERSONS|POST|ERROR`,e);
     responseProperties.statusCode = responseProperties.statusCode<400 ? 500 : responseProperties.statusCode;
-    responseProperties.body = {
-      message: e.message || `INTERNAL SERVER ERROR`
-    }
+    responseProperties.err = e;
   }
 
-  res.status(responseProperties.statusCode).send(responseProperties.body);
+  if(responseProperties.err){
+    responseProperties.httpStatusCode = responseProperties.statusCode;
+    next(responseProperties);
+  } else {
+    res.status(responseProperties.statusCode).send(responseProperties.body);
+  }
+
+  
   })();
 
   
 
 })
-
-
-
 
 app.get('/info',(req,res,next) => {
   // console.log(req.timestamp);
@@ -243,6 +260,22 @@ app.get('/info',(req,res,next) => {
   });
 
 })
+
+
+app.use((errObj,req,res,next) => {
+
+  const additionalProperties = errObj.additionalProperties || {};
+
+  console.log("Handling error...");
+
+  res.status(errObj.httpStatusCode || 500).send({
+    message: errObj.err && errObj.err.message ? errObj.err.message : "INTERNAL SERVER ERROR",
+    ...additionalProperties
+  })
+
+});
+
+
 
 
 app.listen(CONFIG.port, () => {
