@@ -124,7 +124,7 @@ app.delete("/api/persons/:id",(req,res,next) => {
 app.post('/api/persons',(req,res,next) => {
 
   
-
+  //adding new phonebook entry in db
   (async() => {
     const person = {
       name: req.body.name,
@@ -182,7 +182,7 @@ app.post('/api/persons',(req,res,next) => {
 
 app.put('/api/persons/:id',(req,res,next) => {
 
-
+  //changing data in db
   (async() => {
     const personId = req.params.id;
 
