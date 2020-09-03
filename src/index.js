@@ -18,7 +18,8 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const DATA = require(CONFIG.dateFilePath);
 const {
-  logRequestTime
+  logRequestTime,
+  handleErrors
 } = require('./middlewares/index.js');
 const handlebars = require('express-handlebars');
 const morgan = require("morgan");
@@ -241,6 +242,17 @@ app.put('/api/persons/:id',(req,res,next) => {
     next(responseProperties);
   } else {
     res.status(responseProperties.statusCode).send(responseProperties.body);
+  }(errObj,req,res,next) => {
+
+    const additionalProperties = errObj.additionalProperties || {};
+  
+    console.log("Handling error...");
+  
+    res.status(errObj.httpStatusCode || 500).send({
+      message: errObj.err && errObj.err.message ? errObj.err.message : "INTERNAL SERVER ERROR",
+      ...additionalProperties
+    })
+  
   }
 
   
@@ -262,18 +274,7 @@ app.get('/info',(req,res,next) => {
 })
 
 
-app.use((errObj,req,res,next) => {
-
-  const additionalProperties = errObj.additionalProperties || {};
-
-  console.log("Handling error...");
-
-  res.status(errObj.httpStatusCode || 500).send({
-    message: errObj.err && errObj.err.message ? errObj.err.message : "INTERNAL SERVER ERROR",
-    ...additionalProperties
-  })
-
-});
+app.use(handleErrors);
 
 
 
