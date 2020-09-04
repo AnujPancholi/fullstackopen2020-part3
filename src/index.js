@@ -1,6 +1,6 @@
 "use strict";
 
-
+//dotenv fov dev environment, in prod, env variables will be set differently, example, via Heroku
 require("dotenv").config();
 const Mongoose = require("mongoose");
 Mongoose.connect(process.env.DB_URI,{

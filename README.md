@@ -197,5 +197,11 @@ Added the plugin and installed it via npm as instructed, and used the `additiona
 
 Regarding the warning that `mongoose-unique-validator` causes, found the solution in Mongoose docs as asked in the exercise statement under the "ensureIndex()" subheading on [this page](https://mongoosejs.com/docs/deprecations.html). Just passed the `useCreateIndex` flag with `true` during Mongoose db connection.
 
+## Exercise 3.20
+
+Added the required validations on backend, and added the `runValidators` flag found in Mongoose docs to activate validations on update queries.
+
+Was already showing the default `message` property in response of API when it responded with error on the front end, so did not need to make changes in the front end, also, according to the exercise statement, it was okay to show the default error message from mongoose.
+
 
 ---
