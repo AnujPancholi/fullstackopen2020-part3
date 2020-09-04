@@ -181,6 +181,7 @@ app.post('/api/persons',(req,res,next) => {
     }
 
     if(responseProperties.err){
+      //change response code if validation error
       if(responseProperties.err.name==="ValidationError"){
         console.log(responseProperties.err.errors)
         responseProperties.statusCode = 400;
@@ -228,6 +229,7 @@ app.put('/api/persons/:id',(req,res,next) => {
       throw new Error(`RECORD WITH ID ${personId} NOT FOUND`);
     }
 
+    //turn on validations for update
     const personUpdateResult = await EntryModel.updateOne({
       _id: dbUtils.getObjectId(personId)
     },

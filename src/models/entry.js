@@ -2,7 +2,7 @@
 
 const Mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
-
+//set validations
 const EntrySchema = new Mongoose.Schema({
 	name: {
 		type: String,
