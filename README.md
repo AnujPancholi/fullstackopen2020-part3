@@ -191,6 +191,11 @@ I have stated in the description of exercise 3.9 that I ended up making the PUT 
 
 The GET endpoint that takes the id as a URL param was already working, and I used `Model.countDocuments()` to get the accurate count of total number of phonebook entries from the db. Quite simple stuff.
 
+## Exercise 3.19
+
+Added the plugin and installed it via npm as instructed, and used the `additionalProperties` in error handler to pass the relevant information on what exactly has failed in the API response. 
+
+Regarding the warning that `mongoose-unique-validator` causes, found the solution in Mongoose docs as asked in the exercise statement under the "ensureIndex()" subheading on [this page](https://mongoosejs.com/docs/deprecations.html). Just passed the `useCreateIndex` flag with `true` during Mongoose db connection.
 
 
 ---
