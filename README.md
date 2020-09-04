@@ -203,5 +203,9 @@ Added the required validations on backend, and added the `runValidators` flag fo
 
 Was already showing the default `message` property in response of API when it responded with error on the front end, so did not need to make changes in the front end, also, according to the exercise statement, it was okay to show the default error message from mongoose.
 
+## Exercise 3.21
+
+With reference to the description of exercise 3.13 in this readme, I've already accomplised this and the prod build is deployed on Heroku, so no changes needed here.
+
 
 ---
