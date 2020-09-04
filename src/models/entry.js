@@ -1,11 +1,17 @@
 "use strict";
 
 const Mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const EntrySchema = new Mongoose.Schema({
-	name: String,
+	name: {
+		type: String,
+		unique: true
+	},
 	phoneNumber: String
 })
+
+EntrySchema.plugin(uniqueValidator);
 
 EntrySchema.set('toJSON',{
 	transform: (doc,obj) => {

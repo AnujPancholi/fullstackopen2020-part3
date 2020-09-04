@@ -5,7 +5,8 @@ require("dotenv").config();
 const Mongoose = require("mongoose");
 Mongoose.connect(process.env.DB_URI,{
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true
 })
 
 //adding port from env variables for deploy
@@ -152,13 +153,13 @@ app.post('/api/persons',(req,res,next) => {
         throw new Error("MANDATORY PARAM MISSING");
       }
   
-      const existingPerson = await EntryModel.findOne({
-        name: person.name
-      })
-      if(!!existingPerson){
-        responseProperties.statusCode=404;
-        throw new Error(`NAME ${person.name} ALREADY EXISTS`);
-      }
+      // const existingPerson = await EntryModel.findOne({
+      //   name: person.name
+      // })
+      // if(!!existingPerson){
+      //   responseProperties.statusCode=404;
+      //   throw new Error(`NAME ${person.name} ALREADY EXISTS`);
+      // }
   
       const personEntry = new EntryModel({
         name: person.name,
@@ -180,6 +181,16 @@ app.post('/api/persons',(req,res,next) => {
     }
 
     if(responseProperties.err){
+      if(responseProperties.err.errors && responseProperties.err.errors.name){
+        responseProperties.statusCode = 400;
+        responseProperties.additionalProperties = {
+          name: responseProperties.err.errors.name,
+          kind: responseProperties.err.errors.kind,
+          path: responseProperties.err.errors.path,
+          value: responseProperties.err.errors.value
+        }
+      }
+
       responseProperties.httpStatusCode = responseProperties.statusCode;
       next(responseProperties);
     } else {
