@@ -181,14 +181,9 @@ app.post('/api/persons',(req,res,next) => {
     }
 
     if(responseProperties.err){
-      if(responseProperties.err.errors && responseProperties.err.errors.name){
+      if(responseProperties.err.name==="ValidationError"){
+        console.log(responseProperties.err.errors)
         responseProperties.statusCode = 400;
-        responseProperties.additionalProperties = {
-          name: responseProperties.err.errors.name,
-          kind: responseProperties.err.errors.kind,
-          path: responseProperties.err.errors.path,
-          value: responseProperties.err.errors.value
-        }
       }
 
       responseProperties.httpStatusCode = responseProperties.statusCode;
@@ -235,7 +230,10 @@ app.put('/api/persons/:id',(req,res,next) => {
 
     const personUpdateResult = await EntryModel.updateOne({
       _id: dbUtils.getObjectId(personId)
-    },updateProperties);
+    },
+    updateProperties,{
+      runValidators: true
+    });
 
     responseProperties.statusCode = 200;
     responseProperties.body = {

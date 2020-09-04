@@ -6,9 +6,13 @@ const uniqueValidator = require("mongoose-unique-validator");
 const EntrySchema = new Mongoose.Schema({
 	name: {
 		type: String,
+		minlength: 3,
 		unique: true
 	},
-	phoneNumber: String
+	phoneNumber: {
+		type: String,
+		minlength: 8
+	}
 })
 
 EntrySchema.plugin(uniqueValidator);
