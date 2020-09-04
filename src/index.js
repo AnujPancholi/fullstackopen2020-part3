@@ -266,11 +266,17 @@ app.put('/api/persons/:id',(req,res,next) => {
 app.get('/info',(req,res,next) => {
   // console.log(req.timestamp);
 
-  res.render('info',{
-    title: "Info",
-    entryCount: Object.keys(DATA.persons).length,
-    timeString: (new Date(req.timestamp)).toISOString()
-  });
+  (async() => {
+
+    const entriesCount = await EntryModel.countDocuments({});
+    res.render('info',{
+      title: "Info",
+      entryCount: entriesCount,
+      timeString: (new Date(req.timestamp)).toISOString()
+    });
+  })();
+
+  
 
 })
 
