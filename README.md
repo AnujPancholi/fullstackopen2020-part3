@@ -187,6 +187,9 @@ Also, I'm not merely passing the error itself to the middleware, I'm passing an 
 
 I have stated in the description of exercise 3.9 that I ended up making the PUT request then, and it works, so nothing much to add here. Just added a small comment for the submission commit.
 
+## Exercise 3.18
+
+The GET endpoint that takes the id as a URL param was already working, and I used `Model.countDocuments()` to get the accurate count of total number of phonebook entries from the db. Quite simple stuff.
 
 
 
