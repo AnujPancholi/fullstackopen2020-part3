@@ -103,7 +103,7 @@ The main things that I accomplished here:
 
 The above points were relatively simple to implement.
 
-Also, I got a little carried away and implemented a PUT endpoint on the backend to change the phone numbers, and realised my mistake when I re-read the exercise statement later. Will probably re-do it later.
+**Note**: Also, I got a little carried away and implemented a PUT endpoint on the backend to change the phone numbers, and realised my mistake when I re-read the exercise statement later. Will probably re-do it later.
 
 ## Exercise 3.10
 
@@ -174,7 +174,6 @@ As stated in the previous exercise, I ended up completing this exercise in the l
 
 As stated in exrecise 3.13, have already done this, although I did not see the point of using `findByIdAndRemove` like the course suggests, I used `deleteOne` instead.
 
-
 ## Exercise 3.16
 
 I had made one middleware earlier and organised it in a directory in `src`, as I knew I would probabaly be required to make some other middlewares. I have added the error handler middleware inthat directory and imported the same in `index`.
@@ -183,6 +182,10 @@ Also, I'm not merely passing the error itself to the middleware, I'm passing an 
  - err: the error object
  - httpStatusCode: Say the error relates to a missing param or a wrong param, then we may want to respond with some http status code other than 500. Of course, we can also do this by checking what tht error is in the error handler middleware and adding an appropriate code, but that will not be maintainable. In that case we might have to make changes to the error handler middleware to handle some error that a newly added endpoint is throwing. So, we can pass this information from the endpiont itself and the error handler only needs to format that into the response.
  - additionalProperties: Though it is never used in this exercise, we may want to pass tome properties in the response to the user, so we can pass it here and it'll get added to the response.
+
+## Exercise 3.17
+
+I have stated in the description of exercise 3.9 that I ended up making the PUT request then, and it works, so nothing much to add here. Just added a small comment for the submission commit.
 
 
 
