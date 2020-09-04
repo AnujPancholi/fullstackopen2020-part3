@@ -195,6 +195,7 @@ app.post('/api/persons',(req,res,next) => {
 
 })
 
+//put request to change properties in an entry
 app.put('/api/persons/:id',(req,res,next) => {
 
   //changing data in db
