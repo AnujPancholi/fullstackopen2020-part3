@@ -11,10 +11,9 @@ Mongoose.connect(process.env.DB_URI,{
 
 //adding port from env variables for deploy
 const CONFIG = {
-	port: process.env.PORT || 3001,
+  port: process.env.PORT || 3001,
   dateFilePath: `${__dirname}/../data.json`
 }
-const fs = require('fs');
 const express = require("express");
 const bodyParser = require('body-parser');
 const DATA = require(CONFIG.dateFilePath);
@@ -30,9 +29,7 @@ const dbUtils = require("./lib/dbUtils.js");
 const EntryModel = require('./models/entry.js');
 const { resolve } = require("path");
 
-const getNewId = () => {
-  return String(Math.floor(Math.random()*1000000));
-}
+
 
 const app = express();
 
@@ -53,15 +50,15 @@ app.use(express.static('build'));
 
 
 morgan.token('requestPayload', (request, response) => {
-    return JSON.stringify(request.body)
+  return JSON.stringify(request.body)
 })
 
 app.use(morgan(':method :url RESCODE :status - RESTIME :response-time ms - PAYLOAD :requestPayload',{
-	skip: (req,res) => req.method!="POST"
+  skip: (req,res) => req.method!="POST"
 }))
 
 app.use(morgan('tiny',{
-	skip: (req,res) => req.method==="POST"
+  skip: (req,res) => req.method==="POST"
 }));
 
 
@@ -104,30 +101,30 @@ app.get(`/api/persons/:id`,async(req,res,next) => {
 
 
 app.delete("/api/persons/:id",(req,res,next) => {
-    //deletion in db
-    (async() => {
-      let responseCode = 500;
-      try{
-        const deleteResult = await EntryModel.deleteOne({
-          _id: dbUtils.getObjectId(req.params.id)
+  //deletion in db
+  (async() => {
+    let responseCode = 500;
+    try{
+      const deleteResult = await EntryModel.deleteOne({
+        _id: dbUtils.getObjectId(req.params.id)
+      })
+      if(deleteResult.deletedCount>0){
+        res.send({
+          message: `ID ${req.params.id} DELETED`,
+          deletedCount: deleteResult.deletedCount
         })
-        if(deleteResult.deletedCount>0){
-          res.send({
-            message: `ID ${req.params.id} DELETED`,
-            deletedCount: deleteResult.deletedCount
-          })
-        } else {
-          responseCode=404;
-          throw new Error(`ID ${req.params.id} NOT FOUND`);
-        }
-      }catch(e){
-        console.error(`DELETE /persons/:id | ERROR `,e);
-        next({
-          err: e,
-          httpStatusCode: responseCode
-        })
+      } else {
+        responseCode=404;
+        throw new Error(`ID ${req.params.id} NOT FOUND`);
       }
-    })()
+    }catch(e){
+      console.error(`DELETE /persons/:id | ERROR `,e);
+      next({
+        err: e,
+        httpStatusCode: responseCode
+      })
+    }
+  })()
 })
 
 
@@ -209,63 +206,63 @@ app.put('/api/persons/:id',(req,res,next) => {
   (async() => {
     const personId = req.params.id;
 
-  const updateProperties = req.body;
+    const updateProperties = req.body;
 
-  //in case a malicious request tries to change the id of the record
-  delete updateProperties.id;
+    //in case a malicious request tries to change the id of the record
+    delete updateProperties.id;
 
-  const responseProperties = {
-    body: {},
-    statusCode: 204,
-    err: null
-  }
-
-  try{
-    const existingPerson = await EntryModel.findOne({
-      _id: dbUtils.getObjectId(personId)
-    })
-    if(!existingPerson){
-      responseProperties.statusCode=404;
-      throw new Error(`RECORD WITH ID ${personId} NOT FOUND`);
+    const responseProperties = {
+      body: {},
+      statusCode: 204,
+      err: null
     }
 
-    //turn on validations for update
-    const personUpdateResult = await EntryModel.updateOne({
-      _id: dbUtils.getObjectId(personId)
-    },
-    updateProperties,{
-      runValidators: true
-    });
+    try{
+      const existingPerson = await EntryModel.findOne({
+        _id: dbUtils.getObjectId(personId)
+      })
+      if(!existingPerson){
+        responseProperties.statusCode=404;
+        throw new Error(`RECORD WITH ID ${personId} NOT FOUND`);
+      }
 
-    responseProperties.statusCode = 200;
-    responseProperties.body = {
-      message: "RECORD UPDATED",
-      person: DATA.persons[personId]
+      //turn on validations for update
+      const personUpdateResult = await EntryModel.updateOne({
+        _id: dbUtils.getObjectId(personId)
+      },
+      updateProperties,{
+        runValidators: true
+      });
+
+      responseProperties.statusCode = 200;
+      responseProperties.body = {
+        message: "RECORD UPDATED",
+        person: DATA.persons[personId]
+      }
+
+    }catch(e){
+      console.error(`PERSONS|POST|ERROR`,e);
+      responseProperties.statusCode = responseProperties.statusCode<400 ? 500 : responseProperties.statusCode;
+      responseProperties.err = e;
     }
 
-  }catch(e){
-    console.error(`PERSONS|POST|ERROR`,e);
-    responseProperties.statusCode = responseProperties.statusCode<400 ? 500 : responseProperties.statusCode;
-    responseProperties.err = e;
-  }
+    if(responseProperties.err){
+      responseProperties.httpStatusCode = responseProperties.statusCode;
+      next(responseProperties);
+    } else {
+      res.status(responseProperties.statusCode).send(responseProperties.body);
+    }(errObj,req,res,next) => {
 
-  if(responseProperties.err){
-    responseProperties.httpStatusCode = responseProperties.statusCode;
-    next(responseProperties);
-  } else {
-    res.status(responseProperties.statusCode).send(responseProperties.body);
-  }(errObj,req,res,next) => {
-
-    const additionalProperties = errObj.additionalProperties || {};
+      const additionalProperties = errObj.additionalProperties || {};
   
-    console.log("Handling error...");
+      console.log("Handling error...");
   
-    res.status(errObj.httpStatusCode || 500).send({
-      message: errObj.err && errObj.err.message ? errObj.err.message : "INTERNAL SERVER ERROR",
-      ...additionalProperties
-    })
+      res.status(errObj.httpStatusCode || 500).send({
+        message: errObj.err && errObj.err.message ? errObj.err.message : "INTERNAL SERVER ERROR",
+        ...additionalProperties
+      })
   
-  }
+    }
 
   
   })();
@@ -298,6 +295,6 @@ app.use(handleErrors);
 
 
 app.listen(CONFIG.port, () => {
-	console.log(`SERVER LISTENING ON PORT ${CONFIG.port}`);
+  console.log(`SERVER LISTENING ON PORT ${CONFIG.port}`);
 })
 
