@@ -207,5 +207,9 @@ Was already showing the default `message` property in response of API when it re
 
 With reference to the description of exercise 3.13 in this readme, I've already accomplised this and the prod build is deployed on Heroku, so no changes needed here.
 
+## Exercise 3.22
+
+Added the eslint config, and the eslint extension for VS Code was very helpful in getting rid of the indentation errors (thanfully I switched from sublime text to vscode). most of the indentation errors were resolved automatically by the extension, however, I did configure certain rules to circumvent some of the errors, as can be seen in the `.eslintrc` file that I made.
+
 
 ---
